@@ -21,45 +21,71 @@
  */
 package io.github.proxysprojects.mct.crafting;
 
+import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExtendedCraftingRegistry {
-    private static final List<IRecipe> RECIPES = new ArrayList<>();
+    private static final List<IExtendedRecipe> RECIPES = new ArrayList<>();
 
-    /**
-     * Gets the list of registered extended crafting recipes.
-     *
-     * @return The list of recipes
-     */
-    public static List<IRecipe> getRecipes() {
+    public static List<IExtendedRecipe> getRecipes() {
         return RECIPES;
     }
 
-    /**
-     * Registers an extended crafting recipe.
-     *
-     * @param recipe The recipe
-     */
-    public static void registerRecipe(IRecipe recipe) {
+    public static void registerRecipe(IExtendedRecipe recipe) {
         RECIPES.add(recipe);
     }
 
-    /**
-     * Gets the result of a crafting inventory.
-     *
-     * @param craftingInv The crafting inventory
-     * @param world The world in which the inventory is located
-     * @return The crafting result
-     */
+    public static void registerShapedRecipe(Block result, Object... args) {
+        registerRecipe(new ExtendedRecipeShaped(result, args));
+    }
+
+    public static void registerShapedRecipe(Item result, Object... args) {
+        registerRecipe(new ExtendedRecipeShaped(result, args));
+    }
+
+    public static void registerShapedRecipe(@Nonnull ItemStack result, Object... args) {
+        registerRecipe(new ExtendedRecipeShaped(result, args));
+    }
+
+    public static void registerShapelessRecipe(Block result, Object... args) {
+        registerRecipe(new ExtendedRecipeShapeless(result, args));
+    }
+
+    public static void registerShapelessRecipe(Item result, Object... args) {
+        registerRecipe(new ExtendedRecipeShapeless(result, args));
+    }
+
+    public static void registerShapelessRecipe(@Nonnull ItemStack result, Object... args) {
+        registerRecipe(new ExtendedRecipeShapeless(result, args));
+    }
+
     public static ItemStack getCraftingResult(InventoryCrafting craftingInv, World world) {
-        // TODO: implement this
-        return CraftingManager.getInstance().findMatchingRecipe(craftingInv, world);
+        for (IExtendedRecipe recipe : RECIPES)
+            if (recipe.matches(craftingInv, world))
+                return recipe.getCraftingResult(craftingInv);
+        return ItemStack.EMPTY;
+    }
+
+    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting craftingInv, World world) {
+        for (IExtendedRecipe recipe : RECIPES)
+            if (recipe.matches(craftingInv, world))
+                return recipe.getRemainingItems(craftingInv);
+
+        NonNullList<ItemStack> stacks = NonNullList.withSize(craftingInv.getSizeInventory(), ItemStack.EMPTY);
+        for (int index = 0; index < stacks.size(); ++index)
+            stacks.set(index, craftingInv.getStackInSlot(index));
+        return stacks;
+    }
+
+    static {
+        // TODO: implement and register vanilla wrapper
     }
 }
