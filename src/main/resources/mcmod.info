@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mct",
+  "name": "More Crafting Tables",
+  "description": "Adds more crafting tables.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/proxysprojects/MoreCraftingTables",
+  "updateUrl": "",
+  "authorList": ["MrIbby", "Mohron"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

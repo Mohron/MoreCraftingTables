@@ -1,0 +1,47 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = 'Forge'
+            url = 'http://files.minecraftforge.net/maven'
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = mct_version
+group = 'io.github.proxysprojects.mct'
+archivesBaseName = 'MoreCraftingTables-' + minecraft_version
+
+sourceCompatibility = targetCompatibility = java_version
+compileJava {
+    sourceCompatibility = targetCompatibility = java_version
+}
+
+minecraft {
+    version = minecraft_version + '-' + forge_version
+    runDir = 'run'
+    mappings = mappings_version
+    makeObfSourceJar = false
+    replace '@VERSION@', mct_version
+}
+
+dependencies {}
+
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
