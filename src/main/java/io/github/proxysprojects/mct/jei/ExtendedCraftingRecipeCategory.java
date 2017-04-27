@@ -26,8 +26,8 @@ public class ExtendedCraftingRecipeCategory extends BlankRecipeCategory<Extended
 	private final ICraftingGridHelper craftingGridHelper;
 
 	public ExtendedCraftingRecipeCategory(IGuiHelper guiHelper) {
-		ResourceLocation location = new ResourceLocation(MoreCraftingTables.MOD_ID, "textures/gui/extreme_crafting_table_jei.png");
-		background = guiHelper.createDrawable(location, 0, 0, 224, 162);
+		ResourceLocation location = new ResourceLocation(MoreCraftingTables.MOD_ID, "textures/gui/jei/extreme_crafting_table.png");
+		background = guiHelper.createDrawable(location, 0, 0, 162, 204);
 		localizedName = I18n.format("gui.mct.category.crafting");
 		craftingGridHelper = guiHelper.createCraftingGridHelper(craftInputSlot1, craftOutputSlot);
 	}
@@ -51,7 +51,7 @@ public class ExtendedCraftingRecipeCategory extends BlankRecipeCategory<Extended
 	public void setRecipe(IRecipeLayout recipeLayout, ExtendedRecipeWrapper recipeWrapper, IIngredients ingredients) {
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 
-		guiItemStacks.init(craftOutputSlot, false, 167, 73);
+		guiItemStacks.init(craftOutputSlot, false, 72, 4);
 
 		for (int y = 0; y < 9; ++y) {
 			for (int x = 0; x < 9; ++x) {
