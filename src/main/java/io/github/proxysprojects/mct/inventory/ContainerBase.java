@@ -22,6 +22,7 @@
 package io.github.proxysprojects.mct.inventory;
 
 import com.google.common.collect.Lists;
+import io.github.proxysprojects.mct.inventory.util.CompositeListIterator;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -29,6 +30,8 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public abstract class ContainerBase extends Container {
     protected static final String PLAYER_STORAGE_ID = "playerstorage";
@@ -131,23 +134,8 @@ public abstract class ContainerBase extends Container {
      * @return Whether or not the stack was transferred
      */
     protected boolean transferStackTo(ItemStack stack, String[] slotTypeIDs, boolean reverseDirection) {
-        boolean transferred = false;
-        int idx = reverseDirection ? slotTypeIDs.length - 1 : 0;
-        while (true) {
-            if (reverseDirection) {
-                if (idx < 0)
-                    break;
-            } else {
-                if (idx >= slotTypeIDs.length)
-                    break;
-            }
-
-            if (transferStackTo(stack, slotTypeIDs[idx], reverseDirection))
-                transferred = true;
-
-            idx += reverseDirection ? -1 : 1;
-        }
-        return transferred;
+        List<List<Slot>> slotsList = Arrays.stream(slotTypeIDs).map(this::getTypeSlots).collect(Collectors.toList());
+        return transferStackTo(stack, () -> new CompositeListIterator<>(slotsList), reverseDirection);
     }
 
     /**
@@ -162,11 +150,14 @@ public abstract class ContainerBase extends Container {
         List<Slot> slots = getTypeSlots(slotTypeID);
         if (reverseDirection)
             slots = Lists.reverse(slots);
+        return transferStackTo(stack, slots::iterator, reverseDirection);
+    }
 
+    private  boolean transferStackTo(ItemStack stack, Supplier<Iterator<Slot>> slotIteratorSupplier, boolean reverseDirection) {
         boolean transferred = false;
 
         if (stack.isStackable()) {
-            Iterator<Slot> slotIterator = slots.iterator();
+            Iterator<Slot> slotIterator = slotIteratorSupplier.get();
             while (!stack.isEmpty()) {
                 if (!slotIterator.hasNext())
                     break;
@@ -200,7 +191,9 @@ public abstract class ContainerBase extends Container {
         }
 
         if (!stack.isEmpty()) {
-            for (Slot slot : slots) {
+            Iterator<Slot> slotIterator = slotIteratorSupplier.get();
+            while (slotIterator.hasNext()) {
+                Slot slot = slotIterator.next();
                 ItemStack existingStack = slot.getStack();
                 if (existingStack.isEmpty() && slot.isItemValid(stack)) {
                     int newCount = Math.min(stack.getCount(), slot.getSlotStackLimit());
