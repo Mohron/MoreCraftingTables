@@ -15,7 +15,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = mct_version
 group = 'io.github.proxysprojects.mct'
-archivesBaseName = 'MoreCraftingTables-' + minecraft_version
+archivesBaseName = 'MoreCraftingTables-' + mc_version
 
 sourceCompatibility = targetCompatibility = java_version
 compileJava {
@@ -23,14 +23,21 @@ compileJava {
 }
 
 minecraft {
-    version = minecraft_version + '-' + forge_version
+    version = "${mc_version}-${forge_version}"
     runDir = 'run'
     mappings = mappings_version
     makeObfSourceJar = false
     replace '@VERSION@', mct_version
 }
 
-dependencies {}
+repositories {
+    maven {url "http://dvs1.progwml6.com/files/maven"}
+}
+
+dependencies {
+    compileOnly "mezz.jei:jei_${mc_version}:${jei_version}:api"
+    runtime "mezz.jei:jei_${mc_version}:${jei_version}"
+}
 
 processResources {
     inputs.property 'version', project.version
