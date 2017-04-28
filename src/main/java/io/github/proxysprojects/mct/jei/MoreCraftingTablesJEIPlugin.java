@@ -42,34 +42,38 @@ import net.minecraft.item.ItemStack;
 @JEIPlugin
 public class MoreCraftingTablesJEIPlugin extends BlankModPlugin {
 
-	static final String EXTREME_RECIPE_CATEGORY_UID = "mct.crafting";
+	private static IJeiHelpers jeiHelpers;
 
 	@Override
 	public void register(IModRegistry registry) {
-		final IJeiHelpers jeiHelpers = registry.getJeiHelpers();
+		jeiHelpers = registry.getJeiHelpers();
 		final IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 
-		registry.addRecipes(ExtendedCraftingRegistry.getRecipes(), EXTREME_RECIPE_CATEGORY_UID);
+		registry.addRecipes(ExtendedCraftingRegistry.getRecipes(), RecipeCategories.EXTREME_RECIPE_CATEGORY_UID);
 
-		registry.handleRecipes(ExtendedRecipeShaped.class, (recipe) -> new ExtendedShapedRecipeWrapper(jeiHelpers, recipe), EXTREME_RECIPE_CATEGORY_UID);
-		registry.handleRecipes(ExtendedRecipeShapeless.class, (recipe) -> new ExtendedShapelessRecipeWrapper(jeiHelpers, recipe), EXTREME_RECIPE_CATEGORY_UID);
+		registry.handleRecipes(ExtendedRecipeShaped.class, ExtendedShapedRecipeWrapper::new, RecipeCategories.EXTREME_RECIPE_CATEGORY_UID);
+		registry.handleRecipes(ExtendedRecipeShapeless.class, ExtendedShapelessRecipeWrapper::new, RecipeCategories.EXTREME_RECIPE_CATEGORY_UID);
 
 		registry.addRecipeCategories(new ExtendedCraftingRecipeCategory(guiHelper));
 
 		// Add Clickable "Show Recipes" Area
-		registry.addRecipeClickArea(GuiBigCraftingTable.class, 106, 49, 28, 23, EXTREME_RECIPE_CATEGORY_UID);
-		registry.addRecipeClickArea(GuiHugeCraftingTable.class, 137, 67, 28, 23, EXTREME_RECIPE_CATEGORY_UID);
-		registry.addRecipeClickArea(GuiExtremeCraftingTable.class, 173, 85, 28, 23, EXTREME_RECIPE_CATEGORY_UID);
+		registry.addRecipeClickArea(GuiBigCraftingTable.class, 106, 49, 28, 23, RecipeCategories.EXTREME_RECIPE_CATEGORY_UID);
+		registry.addRecipeClickArea(GuiHugeCraftingTable.class, 137, 67, 28, 23, RecipeCategories.EXTREME_RECIPE_CATEGORY_UID);
+		registry.addRecipeClickArea(GuiExtremeCraftingTable.class, 173, 85, 28, 23, RecipeCategories.EXTREME_RECIPE_CATEGORY_UID);
 
 		// Add Recipe Transfer Handler
 		IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerBigCraftingTable.class, EXTREME_RECIPE_CATEGORY_UID, 1, 25, 26, 36);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerHugeCraftingTable.class, EXTREME_RECIPE_CATEGORY_UID, 1, 49, 50, 36);
-		recipeTransferRegistry.addRecipeTransferHandler(ContainerExtremeCraftingTable.class, EXTREME_RECIPE_CATEGORY_UID, 1, 81, 82, 36);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerBigCraftingTable.class, RecipeCategories.EXTREME_RECIPE_CATEGORY_UID, 1, 25, 26, 36);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerHugeCraftingTable.class, RecipeCategories.EXTREME_RECIPE_CATEGORY_UID, 1, 49, 50, 36);
+		recipeTransferRegistry.addRecipeTransferHandler(ContainerExtremeCraftingTable.class, RecipeCategories.EXTREME_RECIPE_CATEGORY_UID, 1, 81, 82, 36);
 
 		// Add Crafting Items
-		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.BIG_CRAFTING_TABLE), EXTREME_RECIPE_CATEGORY_UID);
-		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.HUGE_CRAFTING_TABLE), EXTREME_RECIPE_CATEGORY_UID);
-		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.EXTREME_CRAFTING_TABLE), EXTREME_RECIPE_CATEGORY_UID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.BIG_CRAFTING_TABLE), RecipeCategories.EXTREME_RECIPE_CATEGORY_UID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.HUGE_CRAFTING_TABLE), RecipeCategories.EXTREME_RECIPE_CATEGORY_UID);
+		registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.EXTREME_CRAFTING_TABLE), RecipeCategories.EXTREME_RECIPE_CATEGORY_UID);
+	}
+
+	public static IJeiHelpers getJeiHelpers() {
+		return jeiHelpers;
 	}
 }

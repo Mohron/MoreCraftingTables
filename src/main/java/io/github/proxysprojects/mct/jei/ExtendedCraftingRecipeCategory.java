@@ -54,7 +54,7 @@ public class ExtendedCraftingRecipeCategory extends BlankRecipeCategory {
 
     @Override
     public String getUid() {
-        return MoreCraftingTablesJEIPlugin.EXTREME_RECIPE_CATEGORY_UID;
+        return RecipeCategories.EXTREME_RECIPE_CATEGORY_UID;
     }
 
     @Override

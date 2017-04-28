@@ -21,6 +21,7 @@
  */
 package io.github.proxysprojects.mct.jei;
 
+import io.github.proxysprojects.mct.crafting.ExtendedRecipeShapeless;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
@@ -31,17 +32,15 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import java.util.List;
 
 public class ExtendedShapelessRecipeWrapper extends BlankRecipeWrapper {
-    private final IJeiHelpers jeiHelpers;
     private final ShapelessOreRecipe recipe;
 
-    public ExtendedShapelessRecipeWrapper(IJeiHelpers jeiHelpers, ShapelessOreRecipe recipe) {
-        this.jeiHelpers = jeiHelpers;
+    public ExtendedShapelessRecipeWrapper(ExtendedRecipeShapeless recipe) {
         this.recipe = recipe;
     }
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        IStackHelper stackHelper = jeiHelpers.getStackHelper();
+        IStackHelper stackHelper = MoreCraftingTablesJEIPlugin.getJeiHelpers().getStackHelper();
         ItemStack recipeOutput = recipe.getRecipeOutput();
 
         try {

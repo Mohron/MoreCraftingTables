@@ -21,6 +21,7 @@
  */
 package io.github.proxysprojects.mct.jei;
 
+import io.github.proxysprojects.mct.crafting.ExtendedRecipeShaped;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
@@ -32,17 +33,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ExtendedShapedRecipeWrapper extends BlankRecipeWrapper {
-    private final IJeiHelpers jeiHelpers;
     private final ShapedOreRecipe recipe;
 
-    public ExtendedShapedRecipeWrapper(IJeiHelpers jeiHelpers, ShapedOreRecipe recipe) {
-        this.jeiHelpers = jeiHelpers;
+    public ExtendedShapedRecipeWrapper(ExtendedRecipeShaped recipe) {
         this.recipe = recipe;
     }
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        IStackHelper stackHelper = jeiHelpers.getStackHelper();
+        IStackHelper stackHelper = MoreCraftingTablesJEIPlugin.getJeiHelpers().getStackHelper();
         ItemStack recipeOutput = recipe.getRecipeOutput();
 
         try {
