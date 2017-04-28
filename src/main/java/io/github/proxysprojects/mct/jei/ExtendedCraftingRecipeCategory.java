@@ -73,9 +73,18 @@ public class ExtendedCraftingRecipeCategory extends BlankRecipeCategory {
 
         guiItemStacks.init(craftOutputSlot, false, 72, 4);
 
-        for (int y = 0; y < 9; ++y) {
-            for (int x = 0; x < 9; ++x) {
-                int index = craftInputSlot1 + x + (y * 9);
+        int width = 9;
+        int height = 9;
+
+        if (recipeWrapper instanceof ExtendedShapedRecipeWrapper) {
+            ExtendedShapedRecipeWrapper wrapper = (ExtendedShapedRecipeWrapper) recipeWrapper;
+            width = wrapper.getWidth();
+            height = wrapper.getHeight();
+        }
+
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                int index = craftInputSlot1 + x + (y * width);
                 guiItemStacks.init(index, true, x * 18, 42 + y * 18);
             }
         }
@@ -84,8 +93,7 @@ public class ExtendedCraftingRecipeCategory extends BlankRecipeCategory {
         List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);
 
         if (recipeWrapper instanceof ExtendedShapedRecipeWrapper) {
-            ExtendedShapedRecipeWrapper wrapper = (ExtendedShapedRecipeWrapper) recipeWrapper;
-            craftingGridHelper.setInputs(guiItemStacks, inputs, wrapper.getWidth(), wrapper.getHeight());
+            craftingGridHelper.setInputs(guiItemStacks, inputs, width, height);
         } else {
             craftingGridHelper.setInputs(guiItemStacks, inputs);
             recipeLayout.setShapeless();
